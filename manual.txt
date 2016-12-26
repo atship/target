@@ -1,118 +1,116 @@
-�����㣺
-    1�����̣߳�AsyncTask��
-    2��socketͨ��
-    3���ļ�����
-    4��android�ײ㼼���ܹ���APP��
-    5���Զ���ؼ�������Ч���������ɲο���Դʵ�֣�
-    6���û������¼���������
-    7��SQLite�����������
-    8���������ģʽ��������㣬����������⣩
-    9����Ԫ����
+技术点：
+    1，多线程（AsyncTask）
+    2，socket通信
+    3，文件操作
+    4，android底层技术架构（APP）
+    5，自定义控件及界面效果制作（可参考开源实现）
+    6，用户操作事件传导流程
+    7，SQLite及其基本操作
+    8，软件设计模式（其出发点，解决何种问题）
+    9，单元测试
 
-Ӧ�ã�
-    �����������������������Ҫʱ�ж�Դ���룬��ʵ�����̵ȱ���Ҫ����
-    ����һ���ܰ�������֪ʶ���APPӦ�ã���Ҫ�ںڿ�ľ���ֶ��ϻ��Ѵ���ʱ�䣬���ǹ�����Ҫ����Ŀ��������
-    
-�����������󣬿�ʼѰ���¹����ɣ������ط���������·
+应用：
+    将上述技术点理解清楚，必要时研读源代码，其实现流程等必须要明晰
+    再做一个能包含上述知识点的APP应用，不要在黑客木马手段上花费大量时间，除非工作需要（且目的正当）
 
 
-ѧϰ��־��
-	1�����̣߳�think in java ver3��
-		1������
-			Ϊ�˽��ͬʱ��������������⣬���������ۺ�ʱ�����ṩһ���з�Ӧ��UI���û���
-			���ڷ����������������������ͽ��ܸ������������Ҫ���ǵ�
-		2������
-			CPUΪ�̶߳����е�ÿ���̷߳���cpuʱ�䣬������ÿ���̶߳���Ϊ�Լ���ռCPU����������У�
-			���CPU���Ἣ�ߵ��������̵߳�Ч�ʣ���Ϊÿ���̷߳��䵽��cpuʱ�佫����
-		3��ʵ��
-			1��Thread
-                ����
-                    �����߳�
-                ����
-                    �̴߳���֮��ע�ᵽ�̵߳������У��ɵ���������CPU����ʱ��
-                ʵ��
+学习日志：
+	1，多线程（think in java ver3）
+		1，动机
+			为了解决同时处理多任务的问题，尤其是无论何时都能提供一个有反应的UI给用户，
+			至于服务器，增大数据吞吐量和接受更多的请求是主要考虑点
+		2，机制
+			CPU为线程队列中的每个线程分配cpu时间，以致于每个线程都认为自己独占CPU，不间断运行，
+			多核CPU将会极高的提升多线程的效率，因为每个线程分配到的cpu时间将增多
+		3，实现
+			1，Thread
+                动机
+                    创建线程
+                机制
+                    线程创建之后注册到线程调度器中，由调度器分配CPU运行时间
+                实现
                     new Thread(){public void run(){}}.start();
-			2��Runnable
-			    ����
-			        �����߳�ͬ�������簲׿�п���ʹ�ô˷��������߳��е���
-                ����
-                    ��ʵ���˴˽ӿڵĶ�����õ�ָ�����߳��м���
-                ʵ��
+			2，Runnable
+			    动机
+			        用于线程同步，比如安卓中可以使用此方法在主线程中弹框
+                机制
+                    将实现了此接口的对象放置到指定的线程中即可
+                实现
                     new Thread(new Runnable(){public void run(){}}).start();
                     
-            3���߳�ͬ��
-                ����
+            3，线程同步
+                动机
                     
 
-2������Ļ֧��
-	dpi: ÿӢ���������� ������w2+h2��/ Ӣ�� = ppi; w/Ӣ�� = dpi
-    dp: �����޹سߴ�
-    sp: �����޹����ųߴ磬ר��������
+2，多屏幕支持
+	dpi: 每英寸像素数量 （根号w2+h2）/ 英寸 = ppi; w/英寸 = dpi
+    dp: 像素无关尺寸
+    sp: 像素无关缩放尺寸，专用于文字
     
-    ����ƽ�����ֳ��豸�Լ��������Ĺ淶
-    ��Ļ����/�߶�/��С���� - ����/����
+    关于平板与手持设备以及横竖屏的规范
+    屏幕宽度/高度/最小宽度 - 横向/纵向
        w       h    sw     - land/port
     drawable-
     layout-
     values-
     xml-
     raw-
-    ����ʹ�������������ܹ���Ϊ
-    ָ��dpi��ָ����Ļ�ߴ磬ָ����������ָ�����Ի�����ָ���豸����(watch)���򲼾ַ�ʽ����ؼ��ߴ��Լ�������Դ���ͣ��������ɶ���
-    ʹ��mdpi��Ϊ��׼���趨�������������µĲ�����Դ
+    都可使用上述规则，其总规则为
+    指定dpi，指定屏幕尺寸，指定横竖屏，指定语言环境，指定设备种类(watch)，则布局方式及其控件尺寸以及其它资源类型，都可自由定义
+    使用mdpi作为基准来设定其它属性条件下的布局资源
     
-    ͼƬ��
-        Ϊ���ڸ����豸����ʾͬ����Ч������ҪΪ����Ļ������ͼ����ǰ�豸��mdpi, hdpi, xhdpi, xxhdpi, xxxhdpi����Ӧ�ı���Ϊ 1:1.5:2:3:4
-        ��Ϊͬ�����������ȣ���dpi�����������࣬���ͼƬ�ĳߴ���Ҫ����ź���
+    图片：
+        为了在各个设备上显示同样的效果，需要为多屏幕作多套图，当前设备有mdpi, hdpi, xhdpi, xxhdpi, xxxhdpi，相应的比率为 1:1.5:2:3:4
+        因为同样的物理宽度，高dpi的像素数量多，因此图片的尺寸需要更大才合适
         
-    �ߴ磺
-        dp�ǻ���ͬ�������ɣ���ΪͼƬ���ܶ�̬����������ͼƬ��Ҫ�ֶ����䣬��������ʹ��dp�����Զ����䣬dp�����صĹ�ϵ�� px = dp*(dpi/160)
-        ʹ��dp�Ļ�����ʾЧ������ͬ��Ļ�ı����������ǲ�һ�µģ������Ļ���Ȼ��߸߶����̫�������£�����Ҫ�������õģ�����Ȼʹ��dp������
-        �������������µ�����
+    尺寸：
+        dp是基于同样的理由，因为图片不能动态调整，所以图片需要手动适配，而布局中使用dp将会自动适配，dp与像素的关系是 px = dp*(dpi/160)
+        使用dp的话，显示效果按不同屏幕的比例来讲，是不一致的，因此屏幕宽度或者高度相差太大的情况下，是需要各自设置的，但依然使用dp来定义
+        这样就引入了新的问题
         
-    ���֣�
-        ��ͨ�Ĳ��ֿ��Է�����layout�У����ں�������������ͨ��layout-land/layout-port�ķ�ʽ�����壬Ҳ����ͨ�������е�onConfiguationChanged����������
+    布局：
+        普通的布局可以放置在layout中，至于横向或者纵向可以通过layout-land/layout-port的方式来定义，也可以通过代码中的onConfiguationChanged方法来设置
         
-    ƽ�����ֳ��豸�Ĳ���
-        1��ʹ��ͬһ�ֲ��֣�רҵ��������������������ַ�ʽ��
-        ��ô��Ҫʹ�ò�ͬ�� values/dimens.xml ������ؼ������λ��(margin, padding, width, height, textSize)
+    平板与手持设备的布局
+        1，使用同一种布局（专业的软件制作不会采用这种方式）
+        那么需要使用不同的 values/dimens.xml 来定义控件的相对位置(margin, padding, width, height, textSize)
         
-        2��ʹ�ò�ͬ�Ĳ��֣���רҵ�������������ܲ���������ַ�ʽ��
-        ��ô��Ҫ�������ͨ�豸�Ĳ����Լ�ƽ���豸�Ĳ��֣�����ͬ���ͷֿ�����淶Ϊ
-        ��Ļ����/�߶�/��С���� - ����/����
+        2，使用不同的布局（非专业的软件制作可能不会采用这种方式）
+        那么需要定义好普通设备的布局以及平板设备的布局，按不同类型分开，其规范为
+        屏幕宽度/高度/最小宽度 - 横向/纵向
            w       h    sw     - land/port
-        ��ˣ����Ϊ7Ӣ���ƽ�����ò��֣����ʹ�� layout-sw600dp ������xml�ļ�����ͨ�Ĳ��ֻ�ŵ� layout Ŀ¼��
-        �����Ҫ��ϸ��һ�㣬֧�ֺ��������������ʹ�� layout-sw600dp-land/layout-sw600dp-port �������Ӧ�Ĳ����ļ�
-        ����ڲ����ļ���ʹ�õ�dimen����Ҳ��Ҫ����ͬ��dimens.xml�ļ���ŵ� values-sw600dp-land/values-sw600dp-port Ŀ¼��
+        因此，如果为7英寸的平板设置布局，则会使用 layout-sw600dp 来放置xml文件，普通的布局会放到 layout 目录中
+        如果需要再细致一点，支持横屏竖屏，则可以使用 layout-sw600dp-land/layout-sw600dp-port 来存放相应的布局文件
+        如果在布局文件中使用到dimen，则也需要将不同的dimens.xml文件存放到 values-sw600dp-land/values-sw600dp-port 目录中
 	
-3��Activity���
-    ��ӡ��������adb shell dumpsys activity��Ȼ�����Running activities (most recent first)���ɲ鿴��Ӧ�����¼���������еķ���ջ��¼
-    1�����񼰷���ջ
-        ��������һϵ�е�Activity���ɵ����У����Դ���ĳ���ض��Ĺ���
-        ����ջ��һ��ջ��activity������˳��ѹ��
-    2������Ĺ���
-        ����ģʽ
+3，Activity相关
+    打印任务的命令：adb shell dumpsys activity，然后查找Running activities (most recent first)即可查看相应任务记录并其中所有的返回栈记录
+    1，任务及返回栈
+        任务是由一系列的Activity构成的序列，用以处理某个特定的工作
+        返回栈是一个栈，activity按启动顺序压入
+    2，任务的管理
+        启动模式
             standard: 
-                ÿ��Activity�����Ⱥ�˳����ջ��last in first out
+                每个Activity按照先后顺序入栈，last in first out
             singleTop:
-                ���ջ������ָ����Activityʵ�壬��������ˣ���ʹ��onNewIntent���䷢��Ϣ�����򴴽��µ�ʵ��
+                如果栈中已有指定的Activity实体，并且在最顶端，则使用onNewIntent给其发消息，否则创建新的实体
             singleTask:
-                �����taskAffinity��ص�Task�з�������Ӧ��ʵ�壬�򽫴�Task�ᵽǰ̨����������Task�б�ʵ��֮�ϵ�����Activity����ʹ��onNewIntent���䷢��Ϣ
-                ���û����ϵͳ���ҵ���Ӧ��ʵ�壬�򴴽�һ���µ�task���ٴ���һ���µ�ʵ��
+                如果在taskAffinity相关的Task中发现有相应的实体，则将此Task提到前台，并弹出该Task中本实体之上的所有Activity，再使用onNewIntent给其发消息
+                如果没有在系统中找到相应的实体，则创建一个新的task，再创建一个新的实体
             singleInstance:
-                �����singleTask��ͬ������Task��ֻ����ڱ�ʵ�壬��ʵ������������activity�����ڴ�Task��
+                情况与singleTask相同，但此Task中只会存在本实体，本实体生出的其他activity，不在此Task中
             allowTaskReparenting:
-                ���activity������Ӧ����������taskAffinity��ص�Task���ᵽǰ̨��standardģʽ��activity�����ƶ��ڴ�task�У�singleTask/singleInstance����ֱ����ʾ�����ڵ�task
+                如果activity被其他应用启动，当taskAffinity相关的Task被提到前台后，standard模式下activity将会移动在此task中，singleTask/singleInstance将会直接显示其所在的task
                 
-        ���ģʽ
+        清除模式
             clearTaskOnLaunch:
-                ������root activity�ϣ���ÿ�λص���task�У�����destroy����root���������activity
+                设置在root activity上，则每次回到此task中，将会destroy除了root以外的所有activity
             finishOnTaskLaunch:
-                ������ָ����activity�ϣ���ÿ�λص���task�У���activity���ᱻdestroy
+                设置在指定的activity上，则每次回到此task中，此activity将会被destroy
             alwaysRetainTaskState:
-                ������root activity�ϣ���task�е�����activity�����ᱻ���������Ĭ������£�һ��ʱ��֮�󽫻ᱻ�����root activity
+                设置在root activity上，则task中的所有activity都不会被清除，否则默认情况下，一段时间之后将会被清除至root activity
                 
-    3��Activity��������
-        ������ʱ��onCreate-onPostCreate-onStart-onResume-onPostResume
-        �����ǵ�ʱ��onPause-onSaveInstanceState-...(���ɼ���ʱ��)-onStop
-        �ָ���ʱ��onRestart-onStart...(���ɼ���ʱ��)-onResume-onPostResume-onRestoreInstanceState
+    3，Activity生命周期
+        创建的时候：onCreate-onPostCreate-onStart-onResume-onPostResume
+        被覆盖的时候：onPause-onSaveInstanceState-...(不可见的时候)-onStop
+        恢复的时候：onRestart-onStart...(不可见的时候)-onResume-onPostResume-onRestoreInstanceState
